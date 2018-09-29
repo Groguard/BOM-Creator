@@ -5,7 +5,7 @@ A simple program to extract components from a kicad_pcb file and create a BOM th
 <a href="https://imgur.com/QxEj9XD"><img src="https://i.imgur.com/QxEj9XDh.png" title="source: imgur.com" /></a>
 <a href="https://imgur.com/duMD6Hr"><img src="https://i.imgur.com/duMD6Hrh.png" title="source: imgur.com" /></a>
 <a href="https://imgur.com/6z0RFyG"><img src="https://i.imgur.com/6z0RFyGh.png" title="source: imgur.com" /></a>
-<a href="https://imgur.com/QzTYeUJ"><img src="https://i.imgur.com/QzTYeUJh.png" title="source: imgur.com" /></a>
+<a href="https://imgur.com/cv5SVBU"><img src="https://i.imgur.com/cv5SVBUh.png" title="source: imgur.com" /></a>
 
 **Dependencies**:
 
