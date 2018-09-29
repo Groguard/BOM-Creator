@@ -5,4 +5,4 @@ This project was made using pyqt5 and requires it to be installed.
 # Dependencies::
 python3
 pyqt5
-pip install pyqt5
+  pip install pyqt5
