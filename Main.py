@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		
 	def initUI(self):
 		self.setWindowState(QtCore.Qt.WindowMaximized)
-		self.setWindowTitle('BOM Manager')
+		self.setWindowTitle('BOM Creator')
 		central_widget = QtWidgets.QWidget(self)
 		self.setCentralWidget(central_widget)
 		
