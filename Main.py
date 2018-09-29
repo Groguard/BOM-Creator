@@ -7,7 +7,10 @@ class MainWindow(QtWidgets.QMainWindow):
 	def __init__(self):
 		QtWidgets.QMainWindow.__init__(self)
 		
+		# Start the main window
 		self.initUI()
+		
+		# Open the file import popup
 		self.dialog = FileSelect()
 		self.dialog.setupUi(self.dialog)
 		self.dialog.gotFileName.connect(self.importFile)
@@ -22,10 +25,16 @@ class MainWindow(QtWidgets.QMainWindow):
 		stdicon = self.style().standardIcon
 		style = QtWidgets.QStyle
 		
+		# New file button toolbar
+		newFileButton = QtWidgets.QAction(stdicon(style.SP_FileIcon), 'New File', self)
+		newFileButton.setShortcut('Ctrl+N')
+		newFileButton.setStatusTip('New File')
+		newFileButton.triggered.connect(self.newFile)
+		
 		# Open button toolbar
 		openButton = QtWidgets.QAction(stdicon(style.SP_DialogOpenButton), 'Open', self)
 		openButton.setShortcut('Ctrl+O')
-		openButton.setStatusTip('Open CSV file')
+		openButton.setStatusTip('Open CSV File')
 		openButton.triggered.connect(self.openCSV)
 		
 		# Import button toolbar
@@ -49,6 +58,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		# Add the buttons to the toolbar
 		self.toolbar = self.addToolBar('Tool Bar')
 		self.toolbar.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+		self.toolbar.addAction(newFileButton)
 		self.toolbar.addAction(openButton)
 		self.toolbar.addAction(saveButton)
 		self.toolbar.addAction(importButton)
@@ -62,6 +72,7 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.table = QtWidgets.QTableWidget(self)
 		self.table.setColumnCount(26)
 		self.table.setRowCount(100)
+		self.table.horizontalHeader().setDefaultSectionSize(100)
 
 		grid_layout.addWidget(self.table, 0, 0)   # Adding the table to the grid
 		
@@ -69,8 +80,8 @@ class MainWindow(QtWidgets.QMainWindow):
 		
 	def openFileNamesDialog(self):    
 		options = QtWidgets.QFileDialog.Options()
-		fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None,"Select File",
-		"","kicad_pcb files (*.kicad_pcb);;All Files (*)", options=options)
+		fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, 'Select File',
+		'', 'kicad_pcb files (*.kicad_pcb);;All Files (*)', options=options)
 		if fileName:
 			self.importFile(fileName)
 		
@@ -93,10 +104,11 @@ class MainWindow(QtWidgets.QMainWindow):
 		for line in parts:
 			if 'fp_text reference' in line:
 				reference = line.split(' ')[6]
-			if 'fp_text value' in line:
-					value = line.split(' ')[6]
-			if 'fp_text value' in line and '"' in line:
-					value = line.split('"')[1]
+			elif 'fp_text value' in line and '"' in line:
+				value = line.split('"')[1]
+			elif 'fp_text value' in line:
+				value = line.split(' ')[6]
+
 			if reference != None:
 				storage[reference] = value
 		
@@ -110,12 +122,12 @@ class MainWindow(QtWidgets.QMainWindow):
 				sortedParts[value].append(reference)
 				
 		# Add Column titles
-		self.table.setItem(0, 0, QtWidgets.QTableWidgetItem("Quanity"))
-		self.table.setItem(0, 1, QtWidgets.QTableWidgetItem("Reference"))
-		self.table.setItem(0, 2, QtWidgets.QTableWidgetItem("Value"))
-		self.table.setItem(0, 3, QtWidgets.QTableWidgetItem("Description"))
-		self.table.setItem(0, 4, QtWidgets.QTableWidgetItem("Manufacurer and Part #"))
-		self.table.setItem(0, 5, QtWidgets.QTableWidgetItem("Suplier and Part #"))
+		self.table.setItem(0, 0, QtWidgets.QTableWidgetItem('Quanity'))
+		self.table.setItem(0, 1, QtWidgets.QTableWidgetItem('Reference'))
+		self.table.setItem(0, 2, QtWidgets.QTableWidgetItem('Value'))
+		self.table.setItem(0, 3, QtWidgets.QTableWidgetItem('Description'))
+		self.table.setItem(0, 4, QtWidgets.QTableWidgetItem('Manufacurer and Part #'))
+		self.table.setItem(0, 5, QtWidgets.QTableWidgetItem('Suplier and Part #'))
 		
 		# Add the data to the tables
 		count = 1
@@ -129,7 +141,6 @@ class MainWindow(QtWidgets.QMainWindow):
 			count += 1
 		self.table.resizeColumnsToContents()
 
-	# Save CSV	
 	def saveCSV(self):
 		fileName, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save File', '', 'CSV(*.csv)')
 		if fileName != '':
@@ -144,8 +155,7 @@ class MainWindow(QtWidgets.QMainWindow):
 						else:
 							rowdata.append(item.text())
 					writer.writerow(rowdata)
-
-	# Open CSV						
+				
 	def openCSV(self):
 		rowCount = 0
 		columnCount = 0
@@ -161,12 +171,31 @@ class MainWindow(QtWidgets.QMainWindow):
 					columnCount = 0
 					rowCount += 1
 		self.table.resizeColumnsToContents()
-						
+
+	def newFile(self):
+		self.saveBeforeContin()
+		self.table.horizontalHeader().setDefaultSectionSize(100)
+		self.table.clear()
+	
+	
+	# Save before continue popup
+	def saveBeforeContin(self):
+		reply = QtWidgets.QMessageBox.question(
+		self, 'Message',
+		'Are you sure you want to continue? Any unsaved work will be lost.',
+		QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Close | QtWidgets.QMessageBox.Cancel,
+		QtWidgets.QMessageBox.Save)
+
+		if reply == QtWidgets.QMessageBox.Close:
+			pass
+		if reply == QtWidgets.QMessageBox.Save:
+			self.saveCSV()
+	
 	# Save before close popup
 	def closeEvent(self, event):
 		reply = QtWidgets.QMessageBox.question(
-		self, "Message",
-		"Are you sure you want to quit? Any unsaved work will be lost.",
+		self, 'Message',
+		'Are you sure you want to quit? Any unsaved work will be lost.',
 		QtWidgets.QMessageBox.Save | QtWidgets.QMessageBox.Close | QtWidgets.QMessageBox.Cancel,
 		QtWidgets.QMessageBox.Save)
 
@@ -175,10 +204,10 @@ class MainWindow(QtWidgets.QMainWindow):
 		if reply == QtWidgets.QMessageBox.Save:
 			self.saveCSV()
 		else:
-			pass
+			event.ignore()
             
 
-if __name__ == "__main__":
+if __name__ == '__main__':
  
     app = QtWidgets.QApplication(sys.argv)
     #app.setStyle(QtWidgets.QStyleFactory.create('Fusion'))
