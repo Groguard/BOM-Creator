@@ -3,5 +3,6 @@ A simple program to extract components from a kicad_pcb file and create a BOM th
 
 **Dependencies**:
 python3
+
 pyqt5
 `pip install pyqt5`
