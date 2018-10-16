@@ -126,8 +126,8 @@ class MainWindow(QtWidgets.QMainWindow):
 		self.table.setItem(0, 1, QtWidgets.QTableWidgetItem('Reference'))
 		self.table.setItem(0, 2, QtWidgets.QTableWidgetItem('Value'))
 		self.table.setItem(0, 3, QtWidgets.QTableWidgetItem('Description'))
-		self.table.setItem(0, 4, QtWidgets.QTableWidgetItem('Manufacurer and Part #'))
-		self.table.setItem(0, 5, QtWidgets.QTableWidgetItem('Suplier and Part #'))
+		self.table.setItem(0, 4, QtWidgets.QTableWidgetItem('Manufacturer and Part #'))
+		self.table.setItem(0, 5, QtWidgets.QTableWidgetItem('Supplier and Part #'))
 		
 		# Add the data to the tables
 		count = 1
